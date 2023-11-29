@@ -1,3 +1,15 @@
+/*
+* Класс Product мы используем для регистрации продукта)
+* Поля класса:
+*   1. Название категории
+*   2. Название продукта
+*   3. Производитель
+*   4. цена (которая в дальнейшем меняется при наличии скидки у клиента)
+*   5. масса нетто
+*   6. дата производства
+*   7. годен до
+*
+* */
 class Product extends Category {
     private String title;
     private String manufacturer;
@@ -5,7 +17,6 @@ class Product extends Category {
     private double NetWeight;
     private String dateOfManufacture;
     private String validUntil;
-    private boolean isReg = false;
 
     public Product(String categoryName, String title, String manufacturer, double price, double NetWeight, String dateOfManufacture, String validUntil) {
         super(categoryName);
@@ -17,6 +28,7 @@ class Product extends Category {
         setValidUntil(validUntil);
     }
 
+    // мои любимые геттеры и сеттеры, обожаю их
     public double getNetWeight() {
         return NetWeight;
     }
@@ -49,7 +61,6 @@ class Product extends Category {
         return title;
     }
 
-
     public String getManufacturer() {
         return manufacturer;
     }
@@ -67,6 +78,22 @@ class Product extends Category {
     }
 
 
+    // для формирования чека
+    @Override
+    public String toString() {
+        return String.format("""
+            Категория: %s
+            Название: %s
+            Производитель: %s
+            Цена: %s
+            Дата изготовления: %s
+            Годен до: %s
+            Масса нетто %s грамм.
+            """, getCategoryName(), getTitle(), getManufacturer(), getPrice(),
+                getDateOfManufacture(), getValidUntil(), getNetWeight());
+    }
+
+    // для регистрации продукта в окне регистрации магазина целиком
     public String printInfo() {
         return String.format("""
             Категория: %s
@@ -80,18 +107,10 @@ class Product extends Category {
                 getDateOfManufacture(), getValidUntil(), getNetWeight());
     }
 
+
+    // высчитали скидку и сразу применили её
     public double calculateDiscount(int discountPercentage) {
         double discountAmount = (discountPercentage / 100.0) * price;
         return price - discountAmount;
-    }
-
-    public void regProduct() {
-        if (!isReg) {
-            System.out.println("Регистрация продукта  прошла успешно!\n");
-            printInfo();
-            isReg = true;
-        } else {
-            System.out.println("Продукт уже имеется в магазине\n");
-        }
     }
 }

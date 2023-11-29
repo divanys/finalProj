@@ -1,3 +1,8 @@
+/*
+* Абстрактный класс категории. Просто есть, просто используется
+*
+* */
+
 abstract class Category {
     private String categoryName;
     public Category(String categoryName) {

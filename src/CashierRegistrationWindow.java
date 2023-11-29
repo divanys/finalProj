@@ -3,6 +3,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/*
+* Класс CashierRegistrationWindow описывает форму регистрации кассира.
+* Класс взаимодействует с классами Store (для добавления зарегистрированных кассиров), Cashier (для регистрации кассиров)
+* */
+
 public class CashierRegistrationWindow extends JFrame {
     private JLabel фамилияLabel;
     private JLabel имяLabel;
@@ -34,8 +39,9 @@ public class CashierRegistrationWindow extends JFrame {
     }
 
 
+    // параметры окна
     private void setFixedSizeAndOtherSensitiviti() {
-        Dimension size = new Dimension(300, 400);
+        Dimension size = new Dimension(400, 500);
         setMinimumSize(size);
         setSize(size);
         setLocationRelativeTo(null);
@@ -48,6 +54,7 @@ public class CashierRegistrationWindow extends JFrame {
         setTitle("Регистрация кассира");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        // обработчик на кнопку, которая подтверждает регистрацию кассира
         зарегистрироватьButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -57,12 +64,11 @@ public class CashierRegistrationWindow extends JFrame {
                 int возрастField4Text = Integer.parseInt(возрастField4.getText());
                 int НомерКассыspinner1Text = (int) НомерКассыspinner1.getValue();
 
-                Cashier cashier = new Cashier(фамилияField1Text, имяField2Text, отчествоField3Text, возрастField4Text, НомерКассыspinner1Text);
-                store.addCashier(cashier);
+                Cashier cashier = new Cashier(фамилияField1Text, имяField2Text, отчествоField3Text,
+                        возрастField4Text, НомерКассыspinner1Text);  // хоп хоп, вызвали объект класса Cashier и создали кассира
+                store.addCashier(cashier);  // ну и добавили зарегистрированного кассира в магазин
 
-                dispose();
-
-
+                dispose();  // закрывает текущее окно, которое выполняет операцию регистрации кассира
             }
         });
 

@@ -3,8 +3,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/* Класс ProductRegistrationWindow описывает форму регистрации продукта
+ * Класс взаимодействует с классами Store (для добавления зарегистрированных продуктов и работы с ними),
+ * Product (для регистрации продуктов)
+ */
 public class ProductRegistrationWindow extends JFrame {
-
     private JPanel panel1;
     private JButton зарегистрироватьButton;
     private JLabel названиеКатегорииLabel;
@@ -43,7 +46,7 @@ public class ProductRegistrationWindow extends JFrame {
     }
 
     private void setFixedSizeAndOtherSensitiviti() {
-        Dimension size = new Dimension(300, 400);
+        Dimension size = new Dimension(400, 500);
         setMinimumSize(size);
         setSize(size);
         setLocationRelativeTo(null);
@@ -67,7 +70,8 @@ public class ProductRegistrationWindow extends JFrame {
                 String dateOfManufacture = dateOfManufactureField.getText();
                 String validUntil = validUntilField.getText();
 
-                Product product = new Product(categoryName, title, manufacturer, price, NetWeight, dateOfManufacture, validUntil);
+                Product product = new Product(categoryName, title,
+                        manufacturer, price, NetWeight, dateOfManufacture, validUntil);
                 store.addProduct(product);
 
                 dispose();

@@ -1,5 +1,14 @@
+/*
+*  В классе Customer мы, как ни странно, создаём клиента, имеющего следующие поля:
+*   1. Фамилия
+*   2. Имя
+*   3. Отчество
+*   4. Возраст
+*   5. Номер карты
+*   6. Наличие дисконтной карты
+*
+* */
 class Customer extends Person {
-
     private boolean isDiscountCard;
     private String numberCard;
 
@@ -10,17 +19,32 @@ class Customer extends Person {
     }
 
 
-    public String printInfo() {
+    // для формирования чека
+    @Override
+    public String toString() {
         return String.format("""
-            Фамилия: %s
-            Имя: %s
-            Отчество: %s
-            Возраст: %d
-            Номер карты: %s
-            Наличие скидочной карты: %b
-            """, getLastName(), getFirstName(), getMiddleName(), getAge(), getNumberCard(), isDiscountCard());
+                Фамилия: %s
+                Имя: %s
+                Отчество: %s
+                Возраст: %d
+                Номер карты: %s
+                Наличие скидочной карты: %b
+                """, getLastName(), getFirstName(), getMiddleName(), getAge(), getNumberCard(), isDiscountCard());
     }
 
+    // для вывода при нажатии кнопки "зарегистрированныеКлиентыButton" в окошке регистрации магазина (можно удалить, но...нет))
+    public String printInfo() {
+        return String.format("""
+                Фамилия: %s
+                Имя: %s
+                Отчество: %s
+                Возраст: %d
+                Номер карты: %s
+                Наличие скидочной карты: %b
+                """, getLastName(), getFirstName(), getMiddleName(), getAge(), getNumberCard(), isDiscountCard());
+    }
+
+    // инкапсуляция: есть, чтобы была
     public String getNumberCard() {
         return numberCard;
     }

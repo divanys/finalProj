@@ -1,8 +1,31 @@
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
+/*
+* Класс Store описывает форму Store.
+* Функционал:
+*   1. Необходимо ввести название магазина и нажать кнопку яВвёлНазваниеButton, чтобы сохранить результат введённого названия
+*   2. Зарегистрировать продукты, нажав на кнопку зарегистрироватьПродуктыButton
+*   3. Зарегистрировать кассиров, нажав на кнопку зарегистрироватьСотрудниковButton
+*   4. Зарегистрировать покупателей, нажав на кнопку зарегистрироватьКлиентаButton
+*   5. Для удобства имеются кнопки зарегистрированныеПродуктыButton, зарегистрированныеСотрудникиButton
+*    и зарегистрированныеКлиентыButton для просмотра уже зарегистрированных продуктов, сотрудников и клиентов соответственно
+* (я потеряла смысл слова "зарегистрированный")
+*   6. После регистрации, вам необходимо нажать кнопочку магазинГотовКРаботеButton, чтобы перейти в форму работы с данным магазином
+* Форма регистрации закроется и откроется форма работы с магазином (о чём будет свидетельствовать название окна),
+*  но не переживайте: если вам захочется вернуться и добавить какие-то данные, во 2 форме будет кнопочка для возврата; данные
+* об уже ранее зарегистрированных видах всего сохранятся.
+*
+*/
+
 
 class Store extends JFrame {
     private final ArrayList<Product> products = new ArrayList<>();
@@ -28,7 +51,8 @@ class Store extends JFrame {
     private JPanel reg_and_show;
     private JPanel panel1;
 
-    public void addProduct(Product product) {
+
+    public void addProduct(Product product) {  // добавляем продукт, если он не существует
         boolean isProductExist = false;
         for (Product existingProduct : products) {
             if (existingProduct.getTitle().equals(product.getTitle()) &&
@@ -37,7 +61,7 @@ class Store extends JFrame {
                     (existingProduct.getNetWeight() == product.getNetWeight()) &&
                     existingProduct.getDateOfManufacture().equals(product.getDateOfManufacture()) &&
                     existingProduct.getValidUntil().equals(product.getValidUntil())) {
-                System.out.printf("%s уже зарегистрирован в магазине.\n", product.getTitle());
+                JOptionPane.showMessageDialog(this, "Продукт уже существует!", "Предупреждение", JOptionPane.WARNING_MESSAGE);
                 isProductExist = true;
                 break;
             }
@@ -47,19 +71,14 @@ class Store extends JFrame {
         }
     }
 
-    public void clearProducts() {
-        products.clear();
-        System.out.println("Массив продуктов очищен.");
-    }
-
-    public void addCustomer(Customer customer) {
+    public void addCustomer(Customer customer) {   // добавляем покупателя, если он не существует
         boolean isCustomerExist = false;
         for (Customer existingCustomer : customers) {
             if (existingCustomer.getLastName().equals(customer.getLastName()) &&
                     existingCustomer.getFirstName().equals(customer.getFirstName()) &&
                     existingCustomer.getMiddleName().equals(customer.getMiddleName())) {
-                System.out.printf("%s %s %s уже зарегистрирован в магазине.\n",
-                        customer.getLastName(), customer.getFirstName(), customer.getMiddleName());
+                JOptionPane.showMessageDialog(this, "Клиент уже существует!", "Предупреждение", JOptionPane.WARNING_MESSAGE);
+
                 isCustomerExist = true;
                 break;
             }
@@ -69,14 +88,14 @@ class Store extends JFrame {
         }
     }
 
-    public void addCashier(Cashier cashier) {
+    public void addCashier(Cashier cashier) {   // добавляем кассира, если он не существует
         boolean isCashierExist = false;
         for (Cashier existingCashier : cashiers) {
             if (existingCashier.getLastName().equals(cashier.getLastName()) &&
                     existingCashier.getFirstName().equals(cashier.getFirstName()) &&
                     existingCashier.getMiddleName().equals(cashier.getMiddleName())) {
-                System.out.printf("%s %s %s уже зарегистрирован в магазине.\n",
-                        cashier.getLastName(), cashier.getFirstName(), cashier.getMiddleName());
+                JOptionPane.showMessageDialog(this, "Кассир уже существует!", "Предупреждение", JOptionPane.WARNING_MESSAGE);
+
                 isCashierExist = true;
                 break;
             }
@@ -111,6 +130,8 @@ class Store extends JFrame {
     public Store() {
         this.getContentPane().add(panel1);
         setFixedSizeAndOtherSensitiviti();
+
+        // обработка кнопки "яВвёлНазваниеButton" - если не нажать, магаз будет без названия просто
         яВвёлНазваниеButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -144,6 +165,7 @@ class Store extends JFrame {
             }
         });
 
+        // кнопки для просмотра
         зарегистрированныеПродуктыButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -169,16 +191,19 @@ class Store extends JFrame {
         магазинГотовКРаботеButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AllOrders allOrders  = new AllOrders(getStoreNameField());
-                allOrders.setVisible(true); // Добавление клиента в магазин
+                AllOrders allOrders  = new AllOrders(getStoreNameField(), Store.this);
+                allOrders.setVisible(true);  // показываем окно с параметрами магазина
+                setVisible(false);  // при этом убирая видимость окна регистрации магазина
             }
         });
     }
 
+    // методы для вывода
     private void showRegisteredProducts() {
         String productsInfo = "";
         for (Product product : products) {
             productsInfo += product.printInfo();
+            productsInfo += "\n---------------------------\n";
         }
 
         JOptionPane.showMessageDialog(this, productsInfo, "Зарегистрированные продукты", JOptionPane.INFORMATION_MESSAGE);
@@ -188,6 +213,7 @@ class Store extends JFrame {
         String cashiersInfo = "";
         for (Cashier cashier : cashiers) {
             cashiersInfo += cashier.printInfo();
+            cashiersInfo += "\n---------------------------\n";
         }
 
         JOptionPane.showMessageDialog(this, cashiersInfo, "Зарегистрированные сотрудники", JOptionPane.INFORMATION_MESSAGE);
@@ -197,6 +223,7 @@ class Store extends JFrame {
         String customersInfo = "";
         for (Customer customer : customers) {
             customersInfo += customer.printInfo();
+            customersInfo += "\n---------------------------\n";
         }
 
         JOptionPane.showMessageDialog(this, customersInfo, "Зарегистрированные клиенты", JOptionPane.INFORMATION_MESSAGE);
@@ -204,7 +231,7 @@ class Store extends JFrame {
 
 
     private void setFixedSizeAndOtherSensitiviti() {
-        Dimension size = new Dimension(1150, 800);
+        Dimension size = new Dimension(1700, 800);
         setMinimumSize(size);
         setSize(size);
         setLocationRelativeTo(null);
@@ -217,6 +244,17 @@ class Store extends JFrame {
 
     public void setStoreNameField(String storeNameField) {
         this.storeNameField = storeNameField;
+    }
+
+    public ArrayList<Cashier> getCashiers() {
+        return cashiers;
+    }
+
+    public ArrayList<Customer> getCustomers() {
+        return customers;
+    }
+    public ArrayList<Product> getProducts() {
+        return products;
     }
 
 }
